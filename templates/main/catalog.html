@@ -1,0 +1,123 @@
+<!-- templates/main/catalog.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог книг - Издательство Адыгейского Университета{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Хлебные крошки -->
+<section class="breadcrumbs">
+    <div class="container">
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li>Каталог книг</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<section class="page-header">
+    <div class="container">
+        <h1>Каталог книг</h1>
+        <p>Литература на адыгейском языке для всех возрастов и интересов</p>
+    </div>
+</section>
+
+<!-- Фильтры и поиск -->
+<section class="filters-section">
+    <div class="container">
+        <div class="filters-container">
+            <form method="get" class="search-box">
+                <input type="text" name="search" placeholder="Поиск по названию или автору..." value="{{ search_query }}">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            
+            <div class="filter-options">
+                <select onchange="location = this.value;">
+                    <option value="{% url 'catalog' %}">Все категории</option>
+                    {% for category in categories %}
+                    <option value="{% url 'catalog' %}?category={{ category.slug }}" {% if current_category == category.slug %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <select onchange="location = this.value;">
+                    <option value="{% url 'catalog' %}">Сортировка</option>
+                    <option value="{% url 'catalog' %}?sort=new" {% if sort_by == 'new' %}selected{% endif %}>Сначала новые</option>
+                    <option value="{% url 'catalog' %}?sort=popular" {% if sort_by == 'popular' %}selected{% endif %}>По популярности</option>
+                    <option value="{% url 'catalog' %}?sort=title" {% if sort_by == 'title' %}selected{% endif %}>По названию (А-Я)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Каталог книг -->
+<section class="section catalog">
+    <div class="container">
+        <div class="book-grid">
+            {% for book in books %}
+            <div class="book-card">
+                <div class="book-image">
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                    {% if book.is_bestseller %}
+                    <span class="book-badge">Бестселлер</span>
+                    {% elif book.is_new %}
+                    <span class="book-badge new">Новинка</span>
+                    {% endif %}
+                </div>
+                <div class="book-info">
+                    <div class="book-title">{{ book.title }}</div>
+                    <div class="book-author">{{ book.author.name }}</div>
+                    <div class="book-actions">
+                        <a href="{% url 'book_detail' book.slug %}" class="btn">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-books">
+                <p>Книги не найдены. Попробуйте изменить параметры поиска.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-link disabled"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">4</a>
+            <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Рекомендуемые книги -->
+<section class="section recommended">
+    <div class="container">
+        <h2 class="section-title">Рекомендуемые книги</h2>
+        <div class="book-grid">
+            {% for book in books|slice:":3" %}
+            <div class="book-card">
+                <div class="book-image">
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                    <span class="book-badge">Рекомендуем</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">{{ book.title }}</div>
+                    <div class="book-author">{{ book.author.name }}</div>
+                    <div class="book-actions">
+                        <a href="{% url 'book_detail' book.slug %}" class="btn">Подробнее</a>
+                        <button class="btn-cart"><i class="fas fa-shopping-cart"></i></button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

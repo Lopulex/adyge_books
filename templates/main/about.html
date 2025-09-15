@@ -1,0 +1,195 @@
+<!-- templates/main/about.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}О нас - Издательство Адыгейского Университета{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Хлебные крошки -->
+<section class="breadcrumbs">
+    <div class="container">
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li>Информация</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<section class="page-header">
+    <div class="container">
+        <h1>О нашем издательстве</h1>
+        <p>Более 18 лет сохраняем и развиваем адыгейский язык через литературу</p>
+    </div>
+</section>
+
+<!-- О нас основное -->
+<section class="section about-main">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Наша миссия</h2>
+                <p>Издательство Адыгейского Университета было основано в 2005 году с целью сохранения, развития и популяризации адыгейского языка и культуры. Мы верим, что литература является мощным инструментом для сохранения языкового наследия и передачи культурных ценностей будущим поколениям.</p>
+                
+                <p>За годы работы мы выпустили более 500 книг различных жанров на адыгейском языке, включая художественную литературу, учебные пособия, детские книги, научные работы и сборники фольклора.</p>
+                
+                <div class="mission-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">18+</div>
+                        <div class="stat-label">лет работы</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">изданных книг</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">авторов</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">партнеров</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1568667256549-094345857637?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="История издательства">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Наши ценности -->
+<section class="section values">
+    <div class="container">
+        <h2 class="section-title">Наши ценности</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Сохранение языка</h3>
+                <p>Мы стремимся сохранить адыгейский язык через публикацию качественной литературы на родном языке</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Образование</h3>
+                <p>Разрабатываем учебные материалы для всех уровней образования - от детских садов до вузов</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Поддержка авторов</h3>
+                <p>Мы помогаем талантливым авторам публиковать свои работы и развивать адыгейскую литературу</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Сотрудничество</h3>
+                <p>Работаем с образовательными учреждениями, библиотеками и культурными центрами</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- История -->
+<section class="section history">
+    <div class="container">
+        <h2 class="section-title">Наша история</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">2005</div>
+                <div class="timeline-content">
+                    <h3>Основание издательства</h3>
+                    <p>Создание издательства при Адыгейском Государственном Университете с целью поддержки адыгейского языка</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2008</div>
+                <div class="timeline-content">
+                    <h3>Первая детская серия</h3>
+                    <p>Запуск серии детских книг на адыгейском языке с красочными иллюстрациями</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2012</div>
+                <div class="timeline-content">
+                    <h3>Расширение ассортимента</h3>
+                    <p>Начало публикации учебной литературы и научных работ по адыговедению</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2018</div>
+                <div class="timeline-content">
+                    <h3>Цифровизация</h3>
+                    <p>Запуск электронных версий книг и аудиокниг на адыгейском языке</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2023</div>
+                <div class="timeline-content">
+                    <h3>Современное развитие</h3>
+                    <p>Более 500 изданных книг и активная работа с новыми авторами</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Команда -->
+<section class="section team">
+    <div class="container">
+        <h2 class="section-title">Наша команда</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Директор">
+                </div>
+                <h3>Аслан Камов</h3>
+                <p class="member-position">Директор издательства</p>
+                <p class="member-bio">Кандидат филологических наук, автор работ по адыгейской литературе</p>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Главный редактор">
+                </div>
+                <h3>Марина Кужова</h3>
+                <p class="member-position">Главный редактор</p>
+                <p class="member-bio">Опытный редактор с 15-летним стажем работы с адыгейской литературой</p>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Художественный редактор">
+                </div>
+                <h3>Саида Тлецева</h3>
+                <p class="member-position">Художественный редактор</p>
+                <p class="member-bio">Специалист по книжной иллюстрации и дизайну, работает с национальным колоритом</p>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Менеджер проектов">
+                </div>
+                <h3>Руслан Шевцов</h3>
+                <p class="member-position">Менеджер проектов</p>
+                <p class="member-bio">Координатор культурных проектов и мероприятий издательства</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

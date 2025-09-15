@@ -1,0 +1,196 @@
+<!-- templates/main/index.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная - Издательство Адыгейского Университета{% endblock %}
+
+{% block content %}
+<!-- Герой секция -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Сохранение адыгейского языка через литературу</h1>
+        <p>Издательство, посвященное продвижению адыгейской культуры и языка через публикацию качественной литературы</p>
+        <a href="{% url 'catalog' %}" class="btn">Открыть каталог</a>
+    </div>
+</section>
+
+<!-- О нас -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">О нашем издательстве</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>Мы - издательство Адыгейского Университета, основанное в 2005 году с целью сохранения и развития адыгейского языка и культуры. За годы работы мы выпустили более 500 книг различных жанров на адыгейском языке.</p>
+                <p>Наша миссия - сделать адыгейскую литературу доступной для всех возрастов, способствовать развитию национальной литературы и поддерживать талантливых авторов, пишущих на адыгейском языке.</p>
+                <p>Мы сотрудничаем с образовательными учреждениями, библиотеками и культурными центрами для популяризации чтения на родном языке.</p>
+                <a href="{% url 'about' %}" class="btn">Узнать больше</a>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" alt="Книги на адыгейском языке">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Каталог книг -->
+<section class="section books">
+    <div class="container">
+        <h2 class="section-title">Популярные книги</h2>
+        <div class="book-grid">
+            {% for book in books %}
+            <div class="book-card">
+                <div class="book-image">
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                    {% if book.is_bestseller %}
+                    <span class="book-badge">Бестселлер</span>
+                    {% elif book.is_new %}
+                    <span class="book-badge new">Новинка</span>
+                    {% endif %}
+                </div>
+                <div class="book-info">
+                    <div class="book-title">{{ book.title }}</div>
+                    <div class="book-author">{{ book.author.name }}</div>
+                    <div class="book-actions">
+                        <a href="{% url 'book_detail' book.slug %}" class="btn">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{% url 'catalog' %}" class="btn">Весь каталог</a>
+        </div>
+    </div>
+</section>
+
+<!-- Авторы -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Наши авторы</h2>
+        <div class="authors-grid">
+            {% for author in authors %}
+            <div class="author-card">
+                <div class="author-image">
+                    <img src="{% if author.photo %}{{ author.photo.url }}{% else %}https://images.unsplash.com/photo-1580302378391-c7f61a55d6cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80{% endif %}" alt="{{ author.name }}">
+                </div>
+                <div class="author-info">
+                    <div class="author-name">{{ author.name }}</div>
+                    <div class="author-bio">{{ author.bio|truncatewords:20 }}</div>
+                    <a href="{% url 'author_detail' author.slug %}" class="btn">Подробнее</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{% url 'authors' %}" class="btn">Все авторы</a>
+        </div>
+    </div>
+</section>
+
+<!-- Новости -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Последние новости</h2>
+        <div class="news-grid">
+            {% for news in latest_news %}
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                    <span class="news-badge">{{ news.get_category_display }}</span>
+                    <div class="news-date">
+                        <span class="day">{{ news.publish_date|date:"d" }}</span>
+                        <span class="month">{{ news.publish_date|date:"M" }}</span>
+                    </div>
+                </div>
+                <div class="news-content">
+                    <h2>{{ news.title }}</h2>
+                    <p>{{ news.short_description }}</p>
+                    <div class="news-meta">
+                        <span><i class="fas fa-eye"></i> {{ news.views_count }}</span>
+                        <span><i class="fas fa-clock"></i> {{ news.publish_date|timesince }} назад</span>
+                    </div>
+                    <a href="{% url 'news_detail' news.slug %}" class="btn">Читать далее</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{% url 'news' %}" class="btn">Все новости</a>
+        </div>
+    </div>
+</section>
+
+<!-- Контакты -->
+<section class="section contact">
+    <div class="container">
+        <h2 class="section-title">Контакты</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h3>Адрес</h3>
+                        <p>г. Майкоп, ул. Ленина, 123</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>
+                        <h3>Телефон</h3>
+                        <p>+7 (8772) 12-34-56</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h3>Email</h3>
+                        <p>info@adyge-books.ru</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h3>Режим работы</h3>
+                        <p>Пн-Пт: 9:00 - 18:00</p>
+                        <p>Сб: 10:00 - 16:00</p>
+                        <p>Вс: выходной</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Ваш email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Сообщение</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Отправить сообщение</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

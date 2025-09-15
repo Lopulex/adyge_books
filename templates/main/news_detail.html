@@ -1,0 +1,103 @@
+<!-- templates/main/news_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news_item.title }} - Издательство Адыгейского Университета{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Хлебные крошки -->
+<section class="breadcrumbs">
+    <div class="container">
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li><a href="{% url 'news' %}">Новости</a></li>
+            <li>{{ news_item.title|truncatewords:5 }}</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Детальная информация о новости -->
+<article class="section news-detail">
+    <div class="container">
+        <div class="news-header">
+            <div class="news-meta">
+                <span class="news-category">{{ news_item.get_category_display }}</span>
+                <span class="news-date">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ news_item.publish_date|date:"d.m.Y" }}
+                </span>
+                <span class="news-views">
+                    <i class="fas fa-eye"></i>
+                    {{ news_item.views_count }} просмотров
+                </span>
+            </div>
+            
+            <h1>{{ news_item.title }}</h1>
+            
+            <div class="news-excerpt">
+                <p>{{ news_item.short_description }}</p>
+            </div>
+        </div>
+        
+        <div class="news-image-main">
+            <img src="{{ news_item.image.url }}" alt="{{ news_item.title }}">
+        </div>
+        
+        <div class="news-content">
+            {{ news_item.content|linebreaks }}
+        </div>
+        
+        
+        <!-- Социальные кнопки -->
+        <div class="news-social">
+            <h3>Поделиться новостью</h3>
+            <div class="social-share">
+                <a href="#" class="social-btn vk">
+                    <i class="fab fa-vk"></i>
+                    ВКонтакте
+                </a>
+                <a href="#" class="social-btn telegram">
+                    <i class="fab fa-telegram"></i>
+                    Telegram
+                </a>
+                <a href="#" class="social-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- Похожие новости -->
+<section class="section related-news">
+    <div class="container">
+        <h2 class="section-title">Похожие новости</h2>
+        <div class="news-grid">
+            {% for related_news in news_item.get_related_news %}
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="{{ related_news.image.url }}" alt="{{ related_news.title }}">
+                    <span class="news-badge">{{ related_news.get_category_display }}</span>
+                    <div class="news-date">
+                        <span class="day">{{ related_news.publish_date|date:"d" }}</span>
+                        <span class="month">{{ related_news.publish_date|date:"M" }}</span>
+                    </div>
+                </div>
+                <div class="news-content">
+                    <h2>{{ related_news.title }}</h2>
+                    <p>{{ related_news.short_description|truncatewords:20 }}</p>
+                    <div class="news-meta">
+                        <span><i class="fas fa-eye"></i> {{ related_news.views_count }}</span>
+                        <span><i class="fas fa-clock"></i> {{ related_news.publish_date|timesince }} назад</span>
+                    </div>
+                    <a href="{% url 'news_detail' related_news.slug %}" class="btn">Читать далее</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

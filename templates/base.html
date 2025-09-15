@@ -1,0 +1,90 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Издательство Адыгейского Университета{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sitka+Banner:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="Издательство Адыгейского Университета"> 
+                </a>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="{% url 'index' %}" {% if request.path == '/' %}class="active"{% endif %}>Главная</a></li>
+                    <li><a href="{% url 'catalog' %}" {% if request.path|slice:':8' == '/catalog' %}class="active"{% endif %}>Каталог</a></li>
+                    <li><a href="{% url 'authors' %}" {% if request.path|slice:':8' == '/authors' %}class="active"{% endif %}>Авторы</a></li>
+                    <li><a href="{% url 'about' %}" {% if request.path == '/about/' %}class="active"{% endif %}>Информация</a></li>
+                    <li><a href="{% url 'contacts' %}" {% if request.path == '/contacts/' %}class="active"{% endif %}>Контакты</a></li>
+                    <li><a href="{% url 'news' %}" {% if request.path|slice:':6' == '/news' %}class="active"{% endif %}>Новости</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    {% block breadcrumbs %}{% endblock %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h3>Издательство Адыгейского Университета</h3>
+                <p>Издательство, посвященное сохранению и развитию адыгейского языка и культуры через публикацию качественной литературы.</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Разделы</h3>
+                <ul>
+                    <li><a href="{% url 'index' %}">Главная</a></li>
+                    <li><a href="{% url 'catalog' %}">Каталог книг</a></li>
+                    <li><a href="{% url 'authors' %}">Авторы</a></li>
+                    <li><a href="{% url 'about' %}">О нас</a></li>
+                    <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                    <li><a href="{% url 'news' %}">Новости</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Категории книг</h3>
+                <ul>
+                    {% for category in categories %}
+                    <li><a href="{% url 'catalog' %}?category={{ category.slug }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> г. Майкоп, ул. Ленина, 123</li>
+                    <li><i class="fas fa-phone"></i> +7 (8772) 12-34-56</li>
+                    <li><i class="fas fa-envelope"></i> info@adyge-books.ru</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 Издательство Адыгейского Университета.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Авторы - Издательство Адыгейского Университета{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Хлебные крошки -->
+<section class="breadcrumbs">
+    <div class="container">
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li>Авторы</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<section class="page-header">
+    <div class="container">
+        <h1>Наши авторы</h1>
+        <p>Талантливые писатели, поэты и исследователи, вносящие вклад в развитие адыгейской литературы</p>
+    </div>
+</section>
+
+<!-- Фильтры авторов -->
+<section class="filters-section">
+    <div class="container">
+        <div class="filters-container">
+            <div class="search-box">
+                <input type="text" placeholder="Поиск по имени автора...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="filter-options">
+                <select onchange="location = this.value;">
+                    <option value="{% url 'authors' %}">Все категории</option>
+                    {% for category in author_categories %}
+                    <option value="{% url 'authors' %}?category={{ category.slug }}" 
+                            {% if current_category == category.slug %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <select onchange="location = this.value;">
+                    <option value="{% url 'authors' %}">Все авторы</option>
+                    <option value="{% url 'authors' %}?popular=1" {% if popular_only %}selected{% endif %}>
+                        Только популярные
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Список авторов -->
+<section class="section authors-list">
+    <div class="container">
+        <div class="authors-grid">
+            {% for author in authors %}
+            <div class="author-card">
+                <div class="author-image">
+                    <img src="{% if author.photo %}{{ author.photo.url }}{% else %}{% static 'images/author-placeholder.jpg' %}{% endif %}" alt="{{ author.name }}">
+                    {% if author.is_popular %}
+                    <span class="author-badge">Популярный</span>
+                    {% endif %}
+                    {% if author.categories.all %}
+                    <div class="author-categories">
+                        {% for category in author.categories.all|slice:":2" %}
+                        <span class="category-tag">{{ category.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="author-info">
+                    <div class="author-name">{{ author.name }}</div>
+                    <div class="author-bio">{{ author.bio|truncatewords:30 }}</div>
+                    <div class="author-stats">
+                        <span class="stat"><i class="fas fa-book"></i> {{ author.book_set.count }} книг</span>
+                    </div>
+                    <div class="author-actions">
+                        <a href="{% url 'author_detail' author.slug %}" class="btn">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-authors">
+                <p>Авторы не найдены. Попробуйте изменить параметры фильтрации.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-link disabled"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Призыв к действию -->
+<section class="section cta-authors">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Станьте нашим автором</h2>
+            <p>Мы всегда рады сотрудничеству с талантливыми писателями, поэтами и исследователями, работающими на адыгейском языке</p>
+            <div class="cta-features">
+                <div class="feature">
+                    <i class="fas fa-pen-fancy"></i>
+                    <h3>Поддержка авторов</h3>
+                    <p>Помощь в редактировании и подготовке рукописи к публикации</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Продвижение</h3>
+                    <p>Активная рекламная поддержка и продвижение ваших книг</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Сотрудничество</h3>
+                    <p>Честные условия сотрудничества и прозрачные расчеты</p>
+                </div>
+            </div>
+            <a href="{% url 'contacts' %}" class="btn btn-large">Связаться с нами</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,161 @@
+<!-- templates/main/news.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Новости - Издательство Адыгейского Университета{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Хлебные крошки -->
+<section class="breadcrumbs">
+    <div class="container">
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li>Новости</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<section class="page-header">
+    <div class="container">
+        <h1>Новости издательства</h1>
+        <p>Самые свежие события, анонсы и мероприятия нашего издательства</p>
+    </div>
+</section>
+
+<!-- Фильтры новостей -->
+<section class="filters-section">
+    <div class="container">
+        <div class="filters-container">
+            <div class="search-box">
+                <input type="text" placeholder="Поиск по новостям...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="filter-options">
+                <select>
+                    <option value="">Все категории</option>
+                    <option value="events">Мероприятия</option>
+                    <option value="releases">Новые издания</option>
+                    <option value="awards">Награды</option>
+                    <option value="projects">Проекты</option>
+                </select>
+                
+                <select>
+                    <option value="new">Сначала новые</option>
+                    <option value="popular">По популярности</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Основной контент новостей -->
+<section class="section news-main">
+    <div class="container">
+        <div class="news-grid">
+            {% for news in news_list %}
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                    <span class="news-badge">{{ news.get_category_display }}</span>
+                    <div class="news-date">
+                        <span class="day">{{ news.publish_date|date:"d" }}</span>
+                        <span class="month">{{ news.publish_date|date:"M" }}</span>
+                    </div>
+                </div>
+                <div class="news-content">
+                    <h2>{{ news.title }}</h2>
+                    <p>{{ news.short_description }}</p>
+                    <div class="news-meta">
+                        <span><i class="fas fa-eye"></i> {{ news.views_count }}</span>
+                        <span><i class="fas fa-comments"></i> 18</span>
+                        <span><i class="fas fa-clock"></i> {{ news.publish_date|timesince }} назад</span>
+                    </div>
+                    <a href="{% url 'news_detail' news.slug %}" class="btn">Читать далее</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        <div class="pagination">
+            <a href="#" class="page-link disabled"><i class="fas fa-chevron-left"></i></a>
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">4</a>
+            <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Боковая панель с популярными новостями -->
+<aside class="section news-sidebar">
+    <div class="container">
+        <div class="sidebar-content">
+            <div class="sidebar-widget">
+                <h3>Популярные новости</h3>
+                <div class="popular-news">
+                    {% for news in news_list|slice:":3" %}
+                    <div class="popular-item">
+                        <div class="popular-image">
+                            <img src="{{ news.image.url }}" alt="Популярная новость">
+                        </div>
+                        <div class="popular-content">
+                            <h4>{{ news.title }}</h4>
+                            <span class="popular-date"><i class="fas fa-clock"></i> {{ news.publish_date|timesince }} назад</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3>Категории новостей</h3>
+                <ul class="categories-list">
+                    <li><a href="#"><i class="fas fa-book"></i> Новые издания <span>24</span></a></li>
+                    <li><a href="#"><i class="fas fa-calendar"></i> Мероприятия <span>18</span></a></li>
+                    <li><a href="#"><i class="fas fa-trophy"></i> Награды <span>9</span></a></li>
+                    <li><a href="#"><i class="fas fa-lightbulb"></i> Проекты <span>15</span></a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> События <span>32</span></a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3>Подписка на новости</h3>
+                <div class="subscribe-form">
+                    <p>Будьте в курсе всех событий нашего издательства</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" placeholder="Ваш email" required>
+                        </div>
+                        <button type="submit" class="btn">Подписаться</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Простой скрипт для подписки на новости
+    document.addEventListener('DOMContentLoaded', function() {
+        const subscribeForm = document.querySelector('.subscribe-form form');
+        
+        if (subscribeForm) {
+            subscribeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                alert(`Спасибо за подписку! На адрес ${email} будут приходить наши новости.`);
+                this.reset();
+            });
+        }
+    });
+</script>
+{% endblock %}

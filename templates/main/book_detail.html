@@ -1,0 +1,169 @@
+<!-- templates/main/book_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ book.title }} - Издательство Адыгейского Университета{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Хлебные крошки -->
+<section class="breadcrumbs">
+    <div class="container">
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li><a href="{% url 'catalog' %}">Каталог</a></li>
+            <li>{{ book.title }}</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Детальная информация о книге -->
+<section class="section book-detail">
+    <div class="container">
+        <div class="book-detail-container">
+            <div class="book-detail-image">
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                {% if book.is_bestseller %}
+                <span class="book-badge">Бестселлер</span>
+                {% elif book.is_new %}
+                <span class="book-badge new">Новинка</span>
+                {% endif %}
+            </div>
+            
+            <div class="book-detail-info">
+                <h1>{{ book.title }}</h1>
+                <div class="book-author">
+                    <span>Автор:</span>
+                    <a href="{% url 'author_detail' book.author.slug %}">{{ book.author.name }}</a>
+                </div>
+                
+                <div class="book-categories">
+                    <span>Категории:</span>
+                    {% for category in book.categories.all %}
+                    <a href="{% url 'catalog' %}?category={{ category.slug }}" class="category-tag">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+                
+                <div class="book-price">
+                    <span class="price">{{ book.price }} руб.</span>
+                    {% if book.is_available %}
+                    <span class="availability available">В наличии</span>
+                    {% else %}
+                    <span class="availability not-available">Нет в наличии</span>
+                    {% endif %}
+                </div>
+                
+                <div class="book-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-shopping-cart"></i> Добавить в корзину
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-heart"></i> В избранное
+                    </button>
+                </div>
+                
+                <div class="book-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Дата публикации: {{ book.publication_date|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-book"></i>
+                        <span>ISBN: 978-5-12345-678-9</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Страниц: 256</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Описание книги -->
+        <div class="book-description">
+            <h2>Описание</h2>
+            <div class="description-content">
+                {{ book.description|linebreaks }}
+            </div>
+        </div>
+        
+        <!-- Характеристики -->
+        <div class="book-specs">
+            <h2>Характеристики</h2>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-label">Автор:</span>
+                    <span class="spec-value">{{ book.author.name }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Год издания:</span>
+                    <span class="spec-value">{{ book.publication_date|date:"Y" }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Переплет:</span>
+                    <span class="spec-value">Твердый</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Страниц:</span>
+                    <span class="spec-value">256</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Язык:</span>
+                    <span class="spec-value">Адыгейский</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Формат:</span>
+                    <span class="spec-value">145×215 мм</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Похожие книги -->
+<section class="section related-books">
+    <div class="container">
+        <h2 class="section-title">Похожие книги</h2>
+        <div class="book-grid">
+            {% for related_book in book.categories.first.book_set.all|slice:":4" %}
+            {% if related_book.id != book.id %}
+            <div class="book-card">
+                <div class="book-image">
+                    <img src="{{ related_book.cover_image.url }}" alt="{{ related_book.title }}">
+                    {% if related_book.is_bestseller %}
+                    <span class="book-badge">Бестселлер</span>
+                    {% elif related_book.is_new %}
+                    <span class="book-badge new">Новинка</span>
+                    {% endif %}
+                </div>
+                <div class="book-info">
+                    <div class="book-title">{{ related_book.title }}</div>
+                    <div class="book-author">{{ related_book.author.name }}</div>
+                    <div class="book-price">{{ related_book.price }} руб.</div>
+                    <div class="book-actions">
+                        <a href="{% url 'book_detail' related_book.slug %}" class="btn">Подробнее</a>
+                        <button class="btn-cart"><i class="fas fa-shopping-cart"></i></button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Скрипт для увеличения изображения при клике
+    document.addEventListener('DOMContentLoaded', function() {
+        const bookImage = document.querySelector('.book-detail-image img');
+        if (bookImage) {
+            bookImage.addEventListener('click', function() {
+                this.classList.toggle('zoomed');
+            });
+        }
+    });
+</script>
+{% endblock %}
