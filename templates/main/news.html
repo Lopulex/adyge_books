@@ -123,39 +123,9 @@
                     <li><a href="#"><i class="fas fa-users"></i> События <span>32</span></a></li>
                 </ul>
             </div>
-
-            <div class="sidebar-widget">
-                <h3>Подписка на новости</h3>
-                <div class="subscribe-form">
-                    <p>Будьте в курсе всех событий нашего издательства</p>
-                    <form>
-                        <div class="form-group">
-                            <input type="email" placeholder="Ваш email" required>
-                        </div>
-                        <button type="submit" class="btn">Подписаться</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 </aside>
-
 {% endblock %}
 
-{% block scripts %}
-<script>
-    // Простой скрипт для подписки на новости
-    document.addEventListener('DOMContentLoaded', function() {
-        const subscribeForm = document.querySelector('.subscribe-form form');
-        
-        if (subscribeForm) {
-            subscribeForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = this.querySelector('input[type="email"]').value;
-                alert(`Спасибо за подписку! На адрес ${email} будут приходить наши новости.`);
-                this.reset();
-            });
-        }
-    });
-</script>
-{% endblock %}
+

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
@@ -117,3 +118,29 @@ class News(models.Model):
             category=self.category,
             is_published=True
         ).exclude(id=self.id).order_by('-publish_date')[:3]
+    
+class ContactMessage(models.Model):
+    SUBJECT_CHOICES = [
+        ('general', 'Общий вопрос'),
+        ('cooperation', 'Сотрудничество'),
+        ('manuscript', 'Отправка рукописи'),
+        ('order', 'Заказ книг'),
+        ('other', 'Другое'),
+    ]
+    
+    name = models.CharField(max_length=100, verbose_name="Имя")
+    email = models.EmailField(verbose_name="Email")
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
+    subject = models.CharField(max_length=20, choices=SUBJECT_CHOICES, verbose_name="Тема")
+    message = models.TextField(verbose_name="Сообщение")
+    agree_to_terms = models.BooleanField(verbose_name="Согласие на обработку данных")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
+    is_processed = models.BooleanField(default=False, verbose_name="Обработано")
+    
+    class Meta:
+        verbose_name = "Сообщение обратной связи"
+        verbose_name_plural = "Сообщения обратной связи"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.name} - {self.get_subject_display()} - {self.created_at.strftime('%d.%m.%Y')}"

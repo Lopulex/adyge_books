@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Author, Book, News, AuthorCategory
+from .models import Category, Author, Book, News, AuthorCategory, ContactMessage
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -39,3 +39,21 @@ class NewsAdmin(admin.ModelAdmin):
     list_filter = ['category', 'is_published', 'publish_date']
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ['title', 'content']
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'subject', 'created_at', 'is_processed']
+    list_filter = ['is_processed', 'subject', 'created_at']
+    search_fields = ['name', 'email', 'message']
+    readonly_fields = ['created_at']
+    list_editable = ['is_processed']
+    actions = ['mark_as_processed', 'mark_as_unprocessed']
+    
+    def mark_as_processed(self, request, queryset):
+        queryset.update(is_processed=True)
+    mark_as_processed.short_description = "Отметить как обработанные"
+    
+    def mark_as_unprocessed(self, request, queryset):
+        queryset.update(is_processed=False)
+    mark_as_unprocessed.short_description = "Отметить как необработанные"

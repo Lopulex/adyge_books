@@ -1,5 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Book, Author, News, Category, AuthorCategory
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Book, Author, News, Category, AuthorCategory, ContactMessage
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+from .forms import ContactForm
 
 def index(request):
     books = Book.objects.filter(is_available=True).order_by('-publication_date')[:8]
@@ -158,3 +162,40 @@ def news_detail(request, slug):
         'related_news': related_news,
     }
     return render(request, 'main/news_detail.html', context)
+
+def contacts(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Сохраняем сообщение в базу данных
+            contact_message = form.save()
+            
+            # Отправляем email уведомление
+            try:
+                send_mail(
+                    subject=f'Новое сообщение: {contact_message.get_subject_display()}',
+                    message=f'''
+Имя: {contact_message.name}
+Email: {contact_message.email}
+Телефон: {contact_message.phone or "Не указан"}
+Тема: {contact_message.get_subject_display()}
+Сообщение:
+{contact_message.message}
+                    
+Дата: {contact_message.created_at.strftime("%d.%m.%Y %H:%M")}
+                    ''',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.CONTACT_EMAIL],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                # Логируем ошибку отправки email, но не прерываем выполнение
+                print(f"Ошибка отправки email: {e}")
+            
+            # Показываем сообщение об успехе
+            messages.success(request, 'Ваше сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.')
+            return redirect('contacts')
+    else:
+        form = ContactForm()
+    
+    return render(request, 'main/contacts.html', {'form': form})
